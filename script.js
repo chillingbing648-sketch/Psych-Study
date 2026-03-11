@@ -756,33 +756,103 @@ async function openExam() {
   const names = APP.topics.map(t => t.name).join(', ');
   try {
     const raw = await callClaude(`Generate a complete Indian university psychology exam paper.
-Total marks: 45. Use these topics: ${names}.
+Total marks: 30. Use these topics: ${names}.
 Return JSON:
 {
-  "subject":"Psychology of Adjustment",
-  "time":"3 Hours",
-  "total":45,
-  "q1":{"label":"Fill in the Blanks","marks":15,"items":[
-    {"q":"Sentence with _____.","a":"answer"},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."},
-    {"q":"...","a":"..."}
-  ]},
-  "q2":{"marks":15,"A":"Long answer question A text","B":"Long answer question B text","hints":["key point 1","key point 2","key point 3","key point 4"]},
-  "q3":{"marks":15,"A":"Long answer question A text","B":"Long answer question B text","hints":["key point 1","key point 2","key point 3"]},
-  "q4":{"marks":15,"topics":[
-    {"t":"Short note topic 1","pts":["point 1","point 2","point 3"]},
-    {"t":"Short note topic 2","pts":["point 1","point 2"]},
-    {"t":"Short note topic 3","pts":["point 1","point 2"]},
-    {"t":"Short note topic 4","pts":["point 1","point 2"]},
-    {"t":"Short note topic 5","pts":["point 1","point 2"]}
-  ]}
+  "subject": "Psychology of Adjustment",
+  "time": "1 Hour",
+  "total": 30,
+  "q1": {
+    "label": "Fill in the Blanks",
+    "marks": 15,
+    "items": [
+      { "q": "Fear of social situations is called _____ phobia.", "a": "social" },
+      { "q": "Extreme mood swings occur in _____ disorder.", "a": "bipolar" },
+      { "q": "Hearing voices not present in reality is called _____.", "a": "hallucination" },
+      { "q": "False beliefs not based in reality are called _____.", "a": "delusions" },
+      { "q": "CBT stands for Cognitive _____ Therapy.", "a": "Behavioral" },
+      { "q": "The psychoanalytic approach was developed by _____.", "a": "Sigmund Freud" },
+      { "q": "Chronic mild depression lasting at least 2 years is called _____.", "a": "dysthymia" },
+      { "q": "Repetitive behaviours performed to reduce anxiety are called _____.", "a": "compulsions" },
+      { "q": "The DSM is published by the American _____ Association.", "a": "Psychiatric" },
+      { "q": "Projection of feelings onto the therapist is called _____.", "a": "transference" },
+      { "q": "Seasonal depression is clinically known as _____.", "a": "Seasonal Affective Disorder" },
+      { "q": "A severe eating disorder involving extreme weight loss is _____ nervosa.", "a": "anorexia" },
+      { "q": "Sudden intense episodes of overwhelming fear are called _____ attacks.", "a": "panic" },
+      { "q": "Negative social attitudes toward mental illness are known as _____.", "a": "stigma" },
+      { "q": "The use of rewards to reinforce desired behaviour in therapy is called _____ economy.", "a": "token" }
+    ]
+  },
+  "q2": {
+    "label": "Long Answer Questions (Attempt ANY ONE)",
+    "marks": 15,
+    "A": "Explain the major anxiety disorders with special reference to Generalised Anxiety Disorder (GAD) and Obsessive-Compulsive Disorder (OCD). Discuss their symptoms, diagnostic criteria, causes, and treatment approaches.",
+    "B": "Discuss suicide as a psychological concern. Explain its causes, warning signs, and evidence-based prevention strategies with suitable examples.",
+    "hints": [
+      "Define each disorder clearly using DSM-5 criteria",
+      "Discuss biological, psychological, and sociocultural causes",
+      "Include key psychologists and theoretical models",
+      "Explain at least two evidence-based treatment approaches",
+      "Support your answer with real-world or clinical examples"
+    ]
+  },
+  "q3": {
+    "label": "Short Notes (Attempt ANY THREE — 5 marks each)",
+    "marks": 15,
+    "topics": [
+      {
+        "t": "Psychoanalysis and its Techniques",
+        "pts": [
+          "Founded by Sigmund Freud",
+          "Key techniques: free association, dream analysis, transference",
+          "Focus on unconscious conflicts and repressed memories",
+          "Catharsis as a therapeutic mechanism",
+          "Defence mechanisms: repression, projection, rationalisation"
+        ]
+      },
+      {
+        "t": "Person-Centred Therapy",
+        "pts": [
+          "Developed by Carl Rogers",
+          "Core conditions: unconditional positive regard, empathy, congruence",
+          "Client is the expert of their own experience",
+          "Goal is self-actualisation and personal growth",
+          "Non-directive and humanistic in nature"
+        ]
+      },
+      {
+        "t": "Eating Disorders",
+        "pts": [
+          "Anorexia nervosa: extreme restriction, distorted body image",
+          "Bulimia nervosa: binge-purge cycles, guilt and shame",
+          "Binge Eating Disorder: recurrent overeating without purging",
+          "Biopsychosocial causes including media and cultural pressure",
+          "Treatment: CBT, nutritional counselling, family therapy"
+        ]
+      },
+      {
+        "t": "Personality Disorders",
+        "pts": [
+          "Antisocial Personality Disorder: lack of empathy, rule violation",
+          "Borderline Personality Disorder: emotional instability, fear of abandonment",
+          "Rigid and maladaptive patterns of thinking and behaviour",
+          "Onset typically in adolescence or early adulthood",
+          "Treatment: Dialectical Behaviour Therapy (DBT) for BPD"
+        ]
+      },
+      {
+        "t": "Cultural Issues in Mental Health Care",
+        "pts": [
+          "Stigma and shame as major barriers to help-seeking in India",
+          "Culture-bound syndromes: Dhat, Koro, Susto",
+          "Cultural beliefs influence symptom expression and diagnosis",
+          "Importance of culturally sensitive and competent therapy",
+          "Gender differences in recognising and reporting mental illness"
+        ]
+      }
+    ]
+  }
+}
 }`);
     APP.exam = JSON.parse(raw);
   } catch {
