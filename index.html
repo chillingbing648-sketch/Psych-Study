@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PsychStudy AI — Your Smart Psychology Study Companion</title>
+  <meta name="description" content="AI-powered psychology study platform for Indian university students. Upload question banks, generate flashcards, quizzes, and exam papers.">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" onclick="showPage('home')">
+        <span class="logo-brain">🧠</span>
+        <span>PsychStudy<sup>AI</sup></span>
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a onclick="showPage('home')">Home</a></li>
+        <li><a onclick="showPage('dashboard')" id="nav-topics" class="hidden">Topics</a></li>
+        <li><a onclick="triggerQuiz()" id="nav-quiz" class="hidden">Quiz</a></li>
+        <li><a onclick="triggerExam()" id="nav-exam" class="hidden">Exam Paper</a></li>
+        <li><a onclick="showPage('dashboard')" id="nav-flashcards" class="hidden">Flashcards</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+        <button class="btn btn-primary" onclick="scrollToUpload()">Start Studying</button>
+        <button class="hamburger" id="hamburger" onclick="toggleMenu()">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ LOADING OVERLAY ═══ -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-box">
+      <div class="loading-brain">🧠</div>
+      <h2 class="loading-title">Processing…</h2>
+      <p class="loading-msg" id="loading-msg">Analysing your document…</p>
+      <div class="loading-bar"><div class="loading-fill" id="loading-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════════ -->
+  <main id="page-home" class="page active">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <!-- Left column -->
+        <div class="hero-left">
+          <span class="hero-pill">🎓 Built for Indian University Students</span>
+          <h1 class="hero-h1">
+            Psychology<br>
+            Study <em>Companion</em>
+          </h1>
+          <p class="hero-sub">Your Smart Psychology Study Companion — Learn, Revise, and Master Psychology Concepts Easily</p>
+          <div class="hero-ctas">
+            <button class="btn btn-primary btn-lg" onclick="scrollToUpload()">Start Studying</button>
+            <button class="btn btn-ghost btn-lg" onclick="loadDemo()">✨ Try Demo</button>
+          </div>
+
+          <!-- Brain Visualisation -->
+          <div class="brain-card">
+            <div class="brain-bg">
+              <div class="brain-glow"></div>
+              <div class="brain-orb">🧠</div>
+              <div class="brain-bubble b1"><strong>Clinical Psychology</strong><br><small>Mental disorders</small></div>
+              <div class="brain-bubble b2"><strong>School Psychology</strong><br><small>Educational assessment</small></div>
+              <div class="brain-bubble b3"><strong>Editorial Psychology</strong><br><small>Emotional learning</small></div>
+              <div class="brain-bubble b4"><strong>Positive Psychology</strong><br><small>Well-being & flourishing</small></div>
+              <div class="brain-bubble b5"><strong>Emotional Psychology</strong><br><small>Emotional patterns</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column — Widgets -->
+        <div class="hero-right">
+
+          <!-- Daily Fact -->
+          <div class="widget" id="fact-widget">
+            <div class="widget-label">Daily Psychology Fact</div>
+            <div class="widget-body fact-body">
+              <div class="fact-icon-wrap">🧠</div>
+              <div>
+                <div class="fact-heading" id="fact-heading">Loading…</div>
+                <p class="fact-text" id="fact-text">Fetching today's psychology insight…</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flashcards mini -->
+          <div class="widget" id="flashcard-widget">
+            <div class="widget-row">
+              <div class="widget-label">Flashcards</div>
+              <button class="widget-link" onclick="showPage('dashboard')">View All &rsaquo;</button>
+            </div>
+            <div class="tag-row" id="flash-tags">
+              <span class="tag tag-blue">📘 GAD</span>
+              <span class="tag tag-mint">🟢 OCD</span>
+              <span class="tag tag-pink">💗 BPD</span>
+            </div>
+          </div>
+
+          <!-- Quiz Progress -->
+          <div class="widget">
+            <div class="widget-label">Quiz Progress</div>
+            <div class="progress-list" id="progress-list">
+              <div class="progress-row"><span>Anxiety</span><div class="prog-track"><div class="prog-fill" style="width:72%;--c:#7C6BE8"></div></div><span>72%</span></div>
+              <div class="progress-row"><span>Therapies</span><div class="prog-track"><div class="prog-fill" style="width:55%;--c:#34D399"></div></div><span>55%</span></div>
+              <div class="progress-row"><span>Disorders</span><div class="prog-track"><div class="prog-fill" style="width:40%;--c:#60A5FA"></div></div><span>40%</span></div>
+            </div>
+          </div>
+
+          <!-- Study Modes card -->
+          <div class="widget widget-modes">
+            <div class="widget-label">Study Modes Available</div>
+            <div class="mode-chips">
+              <span class="mode-chip">📚 Deep Study</span>
+              <span class="mode-chip">⚡ Quick Revision</span>
+              <span class="mode-chip">🃏 Flashcards</span>
+              <span class="mode-chip">📝 Quiz</span>
+              <span class="mode-chip">📋 Exam Paper</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section" id="upload-section">
+      <div class="container">
+        <div class="section-label">UPLOAD YOUR MATERIAL</div>
+        <h2 class="section-h2">Start with Your Document</h2>
+        <p class="section-sub">Question banks · Notes · Syllabus — PDF, DOCX, or TXT</p>
+
+        <div class="upload-zone" id="upload-zone"
+          ondragover="event.preventDefault(); this.classList.add('dragover')"
+          ondragleave="this.classList.remove('dragover')"
+          ondrop="handleDrop(event)">
+          <div class="upload-icon">📂</div>
+          <div class="upload-title">Drag &amp; drop your file here</div>
+          <div class="upload-hint">Supported: PDF · DOCX · TXT</div>
+          <div class="upload-btns">
+            <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">📤 Choose File</button>
+            <button class="btn btn-ghost" onclick="loadDemo()">✨ Use Demo Question Bank</button>
+          </div>
+          <input type="file" id="file-input" accept=".pdf,.docx,.txt" style="display:none" onchange="handleFileSelect(event)">
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Row (hidden until doc loaded) -->
+    <section class="stats-section hidden" id="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-ico">🔬</div><div class="stat-val" id="stat-topics">0</div><div class="stat-lbl">Topics Found</div></div>
+          <div class="stat-card"><div class="stat-ico">📁</div><div class="stat-val" id="stat-cats">0</div><div class="stat-lbl">Categories</div></div>
+          <div class="stat-card"><div class="stat-ico">📖</div><div class="stat-val">5</div><div class="stat-lbl">Study Modes</div></div>
+          <div class="stat-card"><div class="stat-ico">✅</div><div class="stat-val">100%</div><div class="stat-lbl">Ready</div></div>
+        </div>
+        <div class="go-dashboard">
+          <button class="btn btn-primary btn-lg" onclick="showPage('dashboard')">Open Topic Dashboard →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="features-section">
+      <div class="container">
+        <div class="section-label">EVERYTHING YOU NEED</div>
+        <h2 class="section-h2">Complete Study System</h2>
+        <div class="features-grid">
+          <div class="feature-card"><div class="feat-ico">🧠</div><h3>AI Topic Extraction</h3><p>Identifies all psychology concepts, disorders, and theories from your uploaded document automatically.</p></div>
+          <div class="feature-card"><div class="feat-ico">📚</div><h3>Deep Study Mode</h3><p>Full explanations with definitions, types, symptoms, key psychologists, examples, and exam-ready summaries.</p></div>
+          <div class="feature-card"><div class="feat-ico">⚡</div><h3>Quick Revision</h3><p>Bullet-point key facts and exam-focused summaries for last-minute preparation sessions.</p></div>
+          <div class="feature-card"><div class="feat-ico">🃏</div><h3>Smart Flashcards</h3><p>AI-generated flip cards per topic with definitions, theories, applications, and psychologist attributions.</p></div>
+          <div class="feature-card"><div class="feat-ico">📝</div><h3>Practice Quiz</h3><p>MCQ and fill-in-the-blank questions with instant scoring, answer explanations, and retry option.</p></div>
+          <div class="feature-card"><div class="feat-ico">📋</div><h3>Exam Paper Generator</h3><p>Full Indian university pattern: Fill in Blanks (15M) + Long Answers (15M each) + Short Notes (15M).</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <span class="logo-brain">🧠</span>
+          <div>
+            <div class="footer-name">PsychStudy AI</div>
+            <div class="footer-tagline">Your Smart Psychology Study Companion</div>
+          </div>
+        </div>
+        <div class="footer-links-row">
+          <a onclick="showPage('home')">Home</a>
+          <a onclick="showPage('dashboard')">Topics</a>
+          <a onclick="triggerQuiz()">Quiz</a>
+          <a onclick="triggerExam()">Exam Paper</a>
+        </div>
+        <div class="footer-credit">Made by <strong>Harsh Dubey</strong></div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE: DASHBOARD
+  ══════════════════════════════════════ -->
+  <main id="page-dashboard" class="page">
+    <div class="page-topbar">
+      <div class="container topbar-inner">
+        <div>
+          <h1 class="page-h1">📚 Topic Dashboard</h1>
+          <p class="page-sub">Select a topic to study or create flashcards</p>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-ghost" onclick="triggerQuiz()">📝 Quiz</button>
+          <button class="btn btn-primary" onclick="triggerExam()">📋 Exam Paper</button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="cat-pills" id="cat-pills">
+        <button class="pill active" onclick="filterCat('All',this)">All</button>
+      </div>
+      <div class="topic-grid" id="topic-grid"></div>
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE: STUDY
+  ══════════════════════════════════════ -->
+  <main id="page-study" class="page">
+    <div class="container">
+      <div class="study-banner" id="study-banner"></div>
+      <div class="mode-tabs" id="mode-tabs">
+        <button class="mode-tab active" id="tab-deep" onclick="setMode('deep')">📚 Deep Study</button>
+        <button class="mode-tab" id="tab-quick" onclick="setMode('quick')">⚡ Quick Revision</button>
+        <button class="mode-tab" onclick="openFlashcardsFromStudy()">🃏 Flashcards</button>
+        <button class="mode-tab ml-auto" onclick="showPage('dashboard')">← Back</button>
+      </div>
+      <div id="study-body"></div>
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE: FLASHCARDS
+  ══════════════════════════════════════ -->
+  <main id="page-flashcards" class="page">
+    <div class="container flashcard-page">
+      <div class="fc-header" id="fc-header"></div>
+      <div class="fc-stage" id="fc-stage"></div>
+      <div class="fc-controls" id="fc-controls"></div>
+      <button class="btn btn-ghost fc-back" onclick="showPage('study')">← Back to Study</button>
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE: QUIZ
+  ══════════════════════════════════════ -->
+  <main id="page-quiz" class="page">
+    <div class="container">
+      <div class="page-topbar-inner">
+        <h1 class="page-h1">📝 Psychology Quiz</h1>
+        <button class="btn btn-ghost" onclick="showPage('dashboard')">← Back</button>
+      </div>
+      <p class="page-sub" id="quiz-sub">Generating your questions…</p>
+      <div id="quiz-score" class="score-card hidden"></div>
+      <div id="quiz-body"></div>
+      <button id="quiz-submit" class="btn btn-primary btn-full hidden" onclick="submitQuiz()">Submit Quiz ✓</button>
+    </div>
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE: EXAM
+  ══════════════════════════════════════ -->
+  <main id="page-exam" class="page">
+    <div class="container">
+      <div class="exam-controls-bar">
+        <button class="btn btn-ghost" id="ans-btn" onclick="toggleAnswers()">✅ Show Answers</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Paper</button>
+        <button class="btn btn-ghost" onclick="showPage('dashboard')">← Back</button>
+      </div>
+      <div id="exam-paper"></div>
+      <div class="exam-end">
+        <p>⸻ End of Examination Paper ⸻</p>
+        <p>Generated by <strong>PsychStudy AI 🧠</strong> | Made by <strong>Harsh Dubey</strong></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
