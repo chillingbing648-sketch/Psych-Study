@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Psychology of Adjustment — Smart Study Companion</title>
+  <meta name="description" content="Professional psychology study platform with flashcards, notes, quizzes, and exam preparation for university students."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ░░░ TOAST NOTIFICATIONS ░░░ -->
+<div id="toast-container" aria-live="polite"></div>
+
+<!-- ░░░ LOADING OVERLAY ░░░ -->
+<div id="loading" class="loading-overlay hidden">
+  <div class="loading-box">
+    <div class="loading-spinner"></div>
+    <p id="loading-msg">Processing…</p>
+  </div>
+</div>
+
+<!-- ░░░ NAVBAR ░░░ -->
+<nav id="navbar" class="navbar">
+  <div class="nav-inner">
+    <button class="nav-logo" onclick="navigate('dashboard')">
+      <span class="logo-icon">🧠</span>
+      <span class="logo-text">PsychStudy<sup>AI</sup></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <button onclick="navigate('dashboard')" class="nav-btn" data-page="dashboard">📊 Dashboard</button>
+      <button onclick="navigate('study')"     class="nav-btn" data-page="study">📚 Study</button>
+      <button onclick="navigate('flashcards')" class="nav-btn" data-page="flashcards">🃏 Flashcards</button>
+      <button onclick="navigate('notes')"     class="nav-btn" data-page="notes">📝 My Notes</button>
+      <button onclick="navigate('quiz')"      class="nav-btn" data-page="quiz">✏️ Quiz</button>
+      <button onclick="navigate('exam')"      class="nav-btn" data-page="exam">📋 Exam Paper</button>
+    </div>
+    <div class="nav-actions">
+      <label class="upload-btn-nav" title="Import PDF">
+        📤 Import PDF
+        <input type="file" id="pdfImport" accept=".pdf" onchange="importPDF(event)" hidden/>
+      </label>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+      <button class="hamburger" onclick="toggleNav()">☰</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════
+     PAGE: DASHBOARD
+═══════════════════════════════════ -->
+<main id="pg-dashboard" class="page active">
+
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-badge">🎓 Psychology of Adjustment · University Edition</div>
+      <h1 class="hero-title">Psychology<br><em>Study Companion</em></h1>
+      <p class="hero-sub">Your Smart Psychology Study Companion — Learn, Revise, and Master Psychology Concepts Easily</p>
+      <div class="hero-ctas">
+        <button class="btn btn-primary btn-lg" onclick="navigate('study')">📚 Start Studying</button>
+        <button class="btn btn-outline btn-lg" onclick="navigate('exam')">📋 Take Exam Paper</button>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="brain-ring ring-1"></div>
+      <div class="brain-ring ring-2"></div>
+      <div class="brain-ring ring-3"></div>
+      <div class="brain-center">🧠</div>
+      <div class="orbit-tag t1">GAD</div>
+      <div class="orbit-tag t2">OCD</div>
+      <div class="orbit-tag t3">CBT</div>
+      <div class="orbit-tag t4">DSM-5</div>
+      <div class="orbit-tag t5">Phobia</div>
+      <div class="orbit-tag t6">PTSD</div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats-bar">
+    <div class="stat-item"><span class="stat-num" id="s-topics">22</span><span class="stat-lbl">Topics</span></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><span class="stat-num" id="s-notes">0</span><span class="stat-lbl">My Notes</span></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><span class="stat-num" id="s-studied">0</span><span class="stat-lbl">Studied</span></div>
+    <div class="stat-div"></div>
+    <div class="stat-item"><span class="stat-num" id="s-quizzes">0</span><span class="stat-lbl">Quizzes Done</span></div>
+  </section>
+
+  <!-- Topics Grid -->
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">CURRICULUM TOPICS</div>
+        <h2 class="section-title">Browse All Topics</h2>
+      </div>
+      <div class="filter-pills" id="filterPills"></div>
+    </div>
+    <div class="topics-grid" id="topicsGrid"></div>
+  </section>
+
+  <!-- Daily Fact -->
+  <section class="section">
+    <div class="daily-fact-card">
+      <div class="fact-icon">💡</div>
+      <div class="fact-body">
+        <div class="fact-eyebrow">DAILY PSYCHOLOGY FACT</div>
+        <h3 class="fact-title" id="factTitle">Loading…</h3>
+        <p class="fact-text" id="factText"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upload Zone -->
+  <section class="section">
+    <div class="upload-hero">
+      <div class="upload-hero-text">
+        <h3>📥 Import Your Own PDF</h3>
+        <p>Upload any psychology PDF and the app will extract topics, generate flashcards, and add them to your study set automatically.</p>
+      </div>
+      <label class="btn btn-primary">
+        Choose PDF File
+        <input type="file" accept=".pdf" onchange="importPDF(event)" hidden/>
+      </label>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>🧠 <strong>PsychStudy AI</strong> — Your Smart Psychology Study Companion</p>
+    <p>Made by <strong>Harsh Dubey</strong></p>
+  </footer>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE: STUDY (Dual Mode)
+═══════════════════════════════════ -->
+<main id="pg-study" class="page">
+  <div class="study-layout">
+    <!-- LEFT: Content Panel -->
+    <div class="study-content-panel">
+      <div class="panel-header">
+        <div class="topic-selector">
+          <button class="panel-nav-btn" id="prevTopic" onclick="changeStudyTopic(-1)">‹</button>
+          <select id="topicSelect" onchange="loadStudyTopic(this.value)"></select>
+          <button class="panel-nav-btn" id="nextTopic" onclick="changeStudyTopic(1)">›</button>
+        </div>
+        <div class="study-mode-tabs">
+          <button class="mode-tab active" id="tab-deep"  onclick="setStudyMode('deep')">📚 Deep</button>
+          <button class="mode-tab"        id="tab-quick" onclick="setStudyMode('quick')">⚡ Quick</button>
+        </div>
+      </div>
+      <div class="study-content" id="studyContent">
+        <div class="empty-state">← Select a topic to start studying</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Notes Panel -->
+    <div class="notes-panel" id="notesPanel">
+      <div class="notes-panel-header">
+        <span>📝 My Notes</span>
+        <div class="notes-actions">
+          <button class="icon-btn" onclick="saveNote()" title="Save Note">💾</button>
+          <button class="icon-btn" onclick="clearNoteEditor()" title="Clear">🗑️</button>
+          <button class="icon-btn" onclick="toggleNotesPanel()" title="Collapse">⟩</button>
+        </div>
+      </div>
+      <input id="noteTitle" class="note-title-input" placeholder="Note title…"/>
+      <textarea id="noteEditor" class="note-editor" placeholder="Write your notes here…&#10;&#10;💡 Tip: This note will be saved to the current topic automatically."></textarea>
+      <div class="saved-notes-list" id="savedNotesList"></div>
+    </div>
+    <button class="notes-collapse-btn hidden" id="notesCollapseBtn" onclick="toggleNotesPanel()">📝</button>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE: FLASHCARDS
+═══════════════════════════════════ -->
+<main id="pg-flashcards" class="page">
+  <div class="page-shell">
+    <div class="page-hdr">
+      <div>
+        <div class="page-eyebrow">INTERACTIVE FLASHCARDS</div>
+        <h1 class="page-h1">🃏 Flashcard Deck</h1>
+      </div>
+      <select id="fcTopicSelect" class="select-input" onchange="loadFlashcards(this.value)">
+        <option value="all">— All Topics —</option>
+      </select>
+    </div>
+
+    <div class="fc-progress-bar">
+      <div class="fc-progress-fill" id="fcProgressFill"></div>
+    </div>
+    <div class="fc-counter" id="fcCounter">Card 1 of 1</div>
+
+    <div class="fc-stage">
+      <div class="fc-card-wrap" id="fcWrap" onclick="flipCard()">
+        <div class="fc-card" id="fcCard">
+          <div class="fc-face fc-front" id="fcFront">
+            <div class="fc-q-num" id="fcQNum">1</div>
+            <div class="fc-term" id="fcTerm">Select a topic to begin</div>
+            <div class="fc-hint">Click card to flip</div>
+          </div>
+          <div class="fc-face fc-back" id="fcBack">
+            <div class="fc-back-label">ANSWER</div>
+            <div class="fc-definition" id="fcDef"></div>
+            <div class="fc-example" id="fcEx"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-controls">
+      <button class="btn btn-outline" onclick="prevCard()">← Prev</button>
+      <div class="fc-dots" id="fcDots"></div>
+      <button class="btn btn-primary" onclick="nextCard()">Next →</button>
+    </div>
+
+    <div class="fc-key-points" id="fcKeyPoints"></div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE: NOTES
+═══════════════════════════════════ -->
+<main id="pg-notes" class="page">
+  <div class="page-shell">
+    <div class="page-hdr">
+      <div>
+        <div class="page-eyebrow">PERSONAL NOTES</div>
+        <h1 class="page-h1">📝 My Notes</h1>
+      </div>
+      <button class="btn btn-primary" onclick="openNewNoteModal()">+ New Note</button>
+    </div>
+
+    <div class="notes-filter-bar">
+      <input class="search-input" id="notesSearch" placeholder="🔍 Search notes…" oninput="filterNotes(this.value)"/>
+      <select class="select-input" id="notesCatFilter" onchange="filterNotes(document.getElementById('notesSearch').value)">
+        <option value="all">All Topics</option>
+      </select>
+    </div>
+
+    <div class="notes-grid" id="notesGrid">
+      <div class="empty-state large">No notes yet. Start studying and jot down your thoughts! 📖</div>
+    </div>
+  </div>
+
+  <!-- Note Modal -->
+  <div class="modal-overlay hidden" id="noteModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">New Note</h3>
+        <button class="icon-btn" onclick="closeNoteModal()">✕</button>
+      </div>
+      <input id="modalNoteTitle" class="modal-input" placeholder="Note title…"/>
+      <select id="modalNoteCat" class="modal-select">
+        <option value="General">General</option>
+      </select>
+      <textarea id="modalNoteBody" class="modal-textarea" placeholder="Write your note here…"></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeNoteModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveModalNote()">Save Note 💾</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE: QUIZ
+═══════════════════════════════════ -->
+<main id="pg-quiz" class="page">
+  <div class="page-shell">
+    <div class="page-hdr">
+      <div>
+        <div class="page-eyebrow">EXAM PREPARATION</div>
+        <h1 class="page-h1">✏️ Practice Quiz</h1>
+      </div>
+      <select class="select-input" id="quizTopicSel" onchange="setupQuiz(this.value)">
+        <option value="mixed">Mixed Topics</option>
+      </select>
+    </div>
+
+    <div id="quizScoreCard" class="score-card hidden"></div>
+    <div id="quizBody"></div>
+    <button id="quizSubmitBtn" class="btn btn-primary btn-full hidden" onclick="submitQuiz()">Submit Answers ✓</button>
+    <button id="quizRetryBtn" class="btn btn-outline btn-full hidden" onclick="resetQuiz()">Retry Quiz ↺</button>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════
+     PAGE: EXAM PAPER
+═══════════════════════════════════ -->
+<main id="pg-exam" class="page">
+  <div class="page-shell">
+    <div class="page-hdr">
+      <div>
+        <div class="page-eyebrow">PRACTICE EXAMINATION</div>
+        <h1 class="page-h1">📋 Exam Paper</h1>
+      </div>
+      <div class="exam-controls">
+        <button class="btn btn-outline" id="toggleAnsBtn" onclick="toggleAnswers()">✅ Show Answers</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+      </div>
+    </div>
+    <div id="examPaper"></div>
+    <div class="exam-footer-note">⸻ End of Paper ⸻<br>Generated by <strong>PsychStudy AI</strong> | Made by <strong>Harsh Dubey</strong></div>
+  </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
